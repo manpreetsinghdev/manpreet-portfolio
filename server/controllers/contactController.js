@@ -12,7 +12,7 @@ const submitContact = async (req, res) => {
       message,
     } = req.body;
 
-    // Save to MongoDB
+    // Save in MongoDB
     const newContact = new Contact({
       firstName,
       lastName,
@@ -24,47 +24,41 @@ const submitContact = async (req, res) => {
 
     await newContact.save();
 
-    // Email to You
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      subject: `New Portfolio Inquiry - ${subject}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
+    // Email section (optional)
+    try {
+      // Email to you
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        subject: `New Portfolio Inquiry - ${subject}`,
+        html: `
+          <h2>New Contact Form Submission</h2>
 
-        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Message:</strong> ${message}</p>
+        `,
+      });
 
-        <p><strong>Email:</strong> ${email}</p>
-
-        <p><strong>Phone:</strong> ${phone}</p>
-
-        <p><strong>Subject:</strong> ${subject}</p>
-
-        <p><strong>Message:</strong></p>
-
-        <p>${message}</p>
-      `,
-    });
-
-    // Auto Reply to User
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Thank you for contacting Manpreet Singh",
-      html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.8; color: #333;">
-          <h2>Thank You for Reaching Out!</h2>
+      // Auto reply
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Thank you for contacting Manpreet Singh",
+        html: `
+          <h2>Thank You!</h2>
 
           <p>Hello ${firstName},</p>
 
           <p>
             Thank you for contacting me through my portfolio website.
-            I have successfully received your message.
+            I have received your message successfully.
           </p>
 
           <p>
-            I appreciate your interest and will review your message shortly.
-            I'll get back to you as soon as possible.
+            I will get back to you as soon as possible.
           </p>
 
           <br>
@@ -72,12 +66,15 @@ const submitContact = async (req, res) => {
           <p>Best Regards,</p>
 
           <strong>Manpreet Singh</strong><br>
-          MCA Student | Web Developer<br>
-          Chandigarh, India
-        </div>
-      `,
-    });
+          MCA Student | Web Developer
+        `,
+      });
 
+    } catch (mailError) {
+      console.log("Email Error:", mailError.message);
+    }
+
+    // Always return success if MongoDB save worked
     res.status(201).json({
       success: true,
       message: "Message sent successfully",
@@ -88,7 +85,7 @@ const submitContact = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Server Error",
     });
   }
 };
