@@ -35,7 +35,7 @@ if (document.getElementById("contactForm")) {
           submitBtn.disabled = true;
   
           const response = await fetch(
-            "http://localhost:5000/api/contact",
+            "https://portfolio-backend-k927.onrender.com/api/contact",
             {
               method: "POST",
               headers: {
