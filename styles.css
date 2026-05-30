@@ -1028,15 +1028,13 @@ section {
   .page-hero4 {
     position: relative;
     background: 
-      linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), /* dark overlay */
-      url("Cntact\ us.jpg") no-repeat center center/cover;
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), /* dark overlay */
+      url("Contaccct\ us.png") no-repeat center center/cover;
     height: 60vh; /* full screen */
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: white;
-    padding: 7 20px;
   }
   
   
